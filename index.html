@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus EduOS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07091A;--bg2:#0D1128;--bg3:#111830;--card:#141A30;--card2:#1A2240;
+  --blue:#4F8EF7;--blue2:#6FA3FF;--purple:#8B5CF6;--teal:#10D9A8;--amber:#F59E0B;--coral:#F26B4E;--green:#22C55E;--red:#EF4444;
+  --text:#EEF2FF;--text2:#8A9BC0;--text3:#4A5878;
+  --border:rgba(255,255,255,0.06);--border2:rgba(79,142,247,0.3);
+  --g1:linear-gradient(135deg,#4F8EF7,#8B5CF6);
+  --g2:linear-gradient(135deg,#10D9A8,#4F8EF7);
+  --g3:linear-gradient(135deg,#F59E0B,#F26B4E);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ========= PAGES ========= */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ========= NAV ========= */
+nav{position:fixed;top:0;left:0;right:0;z-index:999;height:64px;background:rgba(7,9,26,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:0;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.nav-logo-icon{width:34px;height:34px;background:var(--g1);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.nav-logo-text{font-size:17px;font-weight:700;background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{padding:7px 13px;border-radius:8px;font-size:13px;color:var(--text2);cursor:pointer;transition:.15s;border:none;background:none;font-family:inherit}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-link.active{color:var(--text);background:rgba(79,142,247,.12);color:var(--blue2)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:.15s}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--blue2)}
+.btn-outline:hover{background:rgba(79,142,247,.1)}
+.btn-solid{background:var(--g1);color:#fff}
+.btn-solid:hover{opacity:.9;transform:translateY(-1px)}
+.nav-notif{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;position:relative}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--coral);border:1.5px solid var(--bg)}
+
+/* ========= LAYOUT ========= */
+.pt{padding-top:64px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+.wrap-sm{max-width:960px;margin:0 auto;padding:0 32px}
+
+/* ========= HERO ========= */
+.hero{min-height:calc(100vh - 64px);display:flex;flex-direction:column;justify-content:center;padding:60px 32px;max-width:1280px;margin:0 auto;position:relative}
+.orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.12;pointer-events:none;z-index:0}
+.o1{width:700px;height:700px;background:#4F8EF7;top:-200px;left:-200px}
+.o2{width:600px;height:600px;background:#8B5CF6;bottom:-150px;right:-150px}
+.o3{width:300px;height:300px;background:#10D9A8;top:50%;left:50%;transform:translate(-50%,-50%)}
+.hero-content{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.25);border-radius:999px;padding:5px 14px;font-size:12px;color:var(--blue2);margin-bottom:24px;font-weight:500}
+.live-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse2 2s infinite}
+@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
+.hero h1{font-size:clamp(38px,5.5vw,72px);font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:22px}
+.g-text{background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.g-text2{background:var(--g2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.g-text3{background:var(--g3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:17px;color:var(--text2);max-width:640px;line-height:1.75;margin-bottom:36px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:60px}
+.big-btn{padding:14px 30px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.big-btn-primary{background:var(--g1);color:#fff}
+.big-btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(79,142,247,.35)}
+.big-btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.big-btn-ghost:hover{background:rgba(79,142,247,.08);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:48px;flex-wrap:wrap}
+.hst{border-left:2px solid rgba(79,142,247,.3);padding-left:20px}
+.hst-num{font-size:32px;font-weight:800;line-height:1}
+.hst-lbl{font-size:12px;color:var(--text3);margin-top:5px}
+
+/* ========= FEATURE CARDS (home) ========= */
+.features-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:64px}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.feat-card:hover{border-color:rgba(79,142,247,.35);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.feat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.fi-blue{background:rgba(79,142,247,.15);color:var(--blue2)}
+.fi-purple{background:rgba(139,92,246,.15);color:var(--purple)}
+.fi-teal{background:rgba(16,217,168,.15);color:var(--teal)}
+.fi-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.fi-coral{background:rgba(242,107,78,.15);color:var(--coral)}
+.fi-green{background:rgba(34,197,94,.15);color:var(--green)}
+.feat-title{font-size:14px;font-weight:700;margin-bottom:7px}
+.feat-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.feat-arr{position:absolute;top:20px;right:20px;color:var(--text3);font-size:16px;transition:.2s}
+.feat-card:hover .feat-arr{color:var(--blue2);transform:translate(2px,-2px)}
+
+/* ========= SECTION HEADERS ========= */
+.sec-hd{margin-bottom:40px}
+.sec-badge2{display:inline-block;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);border-radius:999px;padding:4px 12px;font-size:11px;color:var(--blue2);font-weight:600;margin-bottom:12px;letter-spacing:.04em;text-transform:uppercase}
+.sec-h2{font-size:clamp(24px,3vw,38px);font-weight:800;letter-spacing:-.8px;margin-bottom:10px}
+.sec-p{font-size:14px;color:var(--text2);line-height:1.7;max-width:580px}
+
+/* ========= DASHBOARD PAGE ========= */
+.dash-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 64px);margin-top:64px}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto}
+.sidebar-section{margin-bottom:28px}
+.sidebar-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:0 10px;margin-bottom:8px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:.15s;font-size:13px;color:var(--text2);border:none;background:none;font-family:inherit;width:100%;text-align:left}
+.sidebar-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.sidebar-item.active{background:rgba(79,142,247,.12);color:var(--blue2)}
+.sidebar-item .si-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sidebar-item .badge-count{margin-left:auto;background:var(--coral);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px}
+.dash-main{padding:28px 32px;background:var(--bg);overflow-y:auto}
+.dash-panel{display:none}
+.dash-panel.active{display:block}
+
+/* METRIC CARDS */
+.metric-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.mc-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mc-val{font-size:28px;font-weight:800;line-height:1;margin-bottom:4px}
+.mc-change{font-size:11px}
+.mc-up{color:var(--green)}
+.mc-down{color:var(--coral)}
+
+/* CHART MOCK */
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.chart-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.chart-sub{font-size:11px;color:var(--text3);margin-bottom:16px}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:100px}
+.bar{flex:1;border-radius:4px 4px 0 0;transition:.3s;position:relative}
+.bar:hover .bar-tip{opacity:1}
+.bar-tip{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-size:10px;white-space:nowrap;opacity:0;pointer-events:none;transition:.15s}
+.chart-labels{display:flex;gap:8px;margin-top:6px}
+.chart-label{flex:1;text-align:center;font-size:10px;color:var(--text3)}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.chart-donut{position:relative;width:120px;height:120px;margin:0 auto 12px}
+.donut-svg{transform:rotate(-90deg)}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.dl-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)}
+.dl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.dc-num{font-size:22px;font-weight:800}
+.dc-lbl{font-size:9px;color:var(--text3)}
+
+/* ALERTS TABLE */
+.alerts-table{width:100%;border-collapse:collapse}
+.alerts-table th{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.alerts-table td{font-size:12px;padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
+.status-badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:700}
+.sb-red{background:rgba(239,68,68,.15);color:#F87171}
+.sb-green{background:rgba(34,197,94,.15);color:var(--green)}
+.sb-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.sb-blue{background:rgba(79,142,247,.15);color:var(--blue2)}
+
+/* GPS MAP PANEL */
+.gps-map{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden;height:340px}
+.map-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);background-size:36px 36px}
+.campus-fence{position:absolute;top:40px;left:60px;right:60px;bottom:60px;border:2px dashed rgba(79,142,247,.35);border-radius:14px}
+.zone-tag{position:absolute;top:50px;left:72px;font-size:10px;color:rgba(79,142,247,.6);font-weight:700}
+.sdot{position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--card)}
+.sdot-ok{background:var(--teal)}
+.sdot-warn{background:var(--amber)}
+.sdot-alert{background:var(--coral);animation:blink2 .8s infinite}
+@keyframes blink2{0%,100%{opacity:1}50%{opacity:.2}}
+.sdot-pulse{position:absolute;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--coral);animation:ripple2 1.5s infinite;top:-6px;left:-6px}
+@keyframes ripple2{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.8);opacity:0}}
+.gps-alert-strip{position:absolute;bottom:14px;left:14px;right:14px;background:rgba(242,107,78,.1);border:1px solid rgba(242,107,78,.35);border-radius:10px;padding:9px 14px;display:flex;align-items:center;gap:10px}
+.gas-icon{font-size:16px}
+.gas-text{font-size:12px;font-weight:700;color:var(--coral)}
+.gas-sub{font-size:10px;color:var(--text2)}
+.student-list{display:flex;flex-direction:column;gap:2px}
+.sl-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:8px;font-size:12px}
+.sl-item:hover{background:rgba(255,255,255,.03)}
+.sl-name{font-weight:600}
+.sl-info{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ========= STUDENTS PAGE ========= */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.ph-title{font-size:20px;font-weight:800}
+.ph-sub{font-size:13px;color:var(--text3);margin-top:3px}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-input{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 14px;color:var(--text);font-size:13px;font-family:inherit;width:240px;transition:.15s}
+.search-input::placeholder{color:var(--text3)}
+.search-input:focus{outline:none;border-color:var(--border2)}
+.filter-btn{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 14px;color:var(--text2);font-size:13px;cursor:pointer;font-family:inherit;transition:.15s}
+.filter-btn:hover{border-color:var(--border2);color:var(--text)}
+.action-btn{background:var(--g1);border:none;border-radius:9px;padding:8px 16px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.action-btn:hover{opacity:.9}
+.students-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.student-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:.2s}
+.student-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.student-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin-bottom:12px;font-size:20px}
+.sc-name{font-size:14px;font-weight:700;margin-bottom:3px}
+.sc-id{font-size:11px;color:var(--text3);margin-bottom:10px}
+.sc-info{display:flex;flex-direction:column;gap:4px}
+.sc-row{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.sc-key{color:var(--text3)}
+.sc-val{color:var(--text2);font-weight:500}
+.sc-status{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:11px}
+
+/* ========= PROFILE MODAL ========= */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:720px;max-height:90vh;overflow-y:auto}
+.modal-header{padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-close{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:4px;transition:.15s}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:24px 28px}
+.profile-top{display:flex;gap:20px;align-items:center;margin-bottom:24px}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:var(--g1);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.profile-name{font-size:20px;font-weight:800;margin-bottom:3px}
+.profile-id{font-size:13px;color:var(--text3);margin-bottom:8px}
+.profile-tags{display:flex;gap:6px;flex-wrap:wrap}
+.ptag{font-size:10px;padding:3px 9px;border-radius:999px;font-weight:600}
+.pt-green{background:rgba(34,197,94,.15);color:var(--green)}
+.pt-blue{background:rgba(79,142,247,.15);color:var(--blue2)}
+.pt-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.info-item{background:var(--card);border-radius:10px;padding:12px 14px}
+.ii-label{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.ii-val{font-size:13px;font-weight:600}
+.progress-row{margin-bottom:14px}
+.pr-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.pr-label{color:var(--text2)}
+.pr-val{font-weight:700}
+.progress-bar{height:6px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;border-radius:99px;transition:width .6s}
+
+/* ========= CLASSROOM PAGE ========= */
+.classroom-layout{display:grid;grid-template-columns:1fr 320px;gap:20px}
+.class-main{display:flex;flex-direction:column;gap:16px}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:999px;padding:4px 10px;font-size:11px;color:#F87171;font-weight:700}
+.live-badge .live-dot2{width:6px;height:6px;border-radius:50%;background:#EF4444;animation:pulse2 1s infinite}
+.video-mock{background:var(--card);border:1px solid var(--border);border-radius:16px;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.video-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,142,247,.05),rgba(139,92,246,.05))}
+.video-icon{font-size:48px;margin-bottom:12px;position:relative;z-index:1}
+.video-label{font-size:14px;font-weight:700;position:relative;z-index:1;margin-bottom:6px}
+.video-sub{font-size:12px;color:var(--text2);position:relative;z-index:1}
+.video-controls{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:10px}
+.vc-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.vc-btn:hover{background:rgba(255,255,255,.2)}
+.vc-btn.vc-red{background:rgba(239,68,68,.3);border-color:rgba(239,68,68,.5)}
+.class-sidebar{display:flex;flex-direction:column;gap:14px}
+.cs-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+.cs-title{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.participant-list{display:flex;flex-direction:column;gap:8px}
+.participant{display:flex;align-items:center;gap:10px;font-size:12px}
+.part-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.part-name{font-weight:600}
+.part-role{font-size:10px;color:var(--text3)}
+.timetable{width:100%;border-collapse:collapse}
+.timetable th{font-size:10px;color:var(--text3);padding:6px 8px;text-align:left;border-bottom:1px solid var(--border)}
+.timetable td{font-size:11px;padding:7px 8px;border-bottom:1px solid var(--border);color:var(--text2)}
+.tt-current{background:rgba(79,142,247,.08)}
+.tt-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700}
+
+/* ========= PARENT PAGE ========= */
+.parent-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.parent-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px}
+.pc-title{font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:14px;padding:10px 0}
+.tl-line{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tl-connector{flex:1;width:1px;background:var(--border);margin-top:3px}
+.tl-content{flex:1;padding-top:0}
+.tl-title{font-size:12px;font-weight:600;margin-bottom:2px}
+.tl-time{font-size:10px;color:var(--text3)}
+.tl-desc{font-size:11px;color:var(--text2);margin-top:3px;line-height:1.5}
+.grade-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.gr-subject{font-size:12px;font-weight:600;width:90px;flex-shrink:0}
+.gr-bar{flex:1;height:6px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.gr-fill{height:100%;border-radius:99px}
+.gr-pct{font-size:12px;font-weight:700;width:36px;text-align:right}
+.fee-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}
+.fee-label{font-weight:600}
+.fee-due{color:var(--text3);font-size:11px;margin-top:2px}
+.fee-amount{font-weight:700}
+.fee-paid{color:var(--green)}
+.fee-pending{color:var(--amber)}
+.comm-list{display:flex;flex-direction:column;gap:8px}
+.comm-item{background:var(--bg3);border-radius:10px;padding:12px}
+.ci-from{font-size:11px;font-weight:700;margin-bottom:3px}
+.ci-msg{font-size:12px;color:var(--text2);line-height:1.5}
+.ci-time{font-size:10px;color:var(--text3);margin-top:5px}
+
+/* ========= ANALYTICS PAGE ========= */
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.an-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.ai-insight{display:flex;gap:12px;align-items:flex-start;padding:10px;background:rgba(79,142,247,.05);border:1px solid rgba(79,142,247,.15);border-radius:10px;margin-top:14px;font-size:12px}
+.ai-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.ai-text{color:var(--text2);line-height:1.6}
+.risk-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
+.risk-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.risk-name{font-weight:600;margin-bottom:2px}
+.risk-reason{font-size:11px;color:var(--text3)}
+.risk-score{margin-left:auto;font-size:13px;font-weight:800}
+
+/* ========= SECURITY PAGE ========= */
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.sec-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;display:flex;gap:14px}
+.seci-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.seci-title{font-size:14px;font-weight:700;margin-bottom:5px}
+.seci-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.log-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:12px;transition:.15s}
+.log-row:hover{background:rgba(255,255,255,.03)}
+.log-type{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* ========= PRICING PAGE ========= */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;margin-top:40px}
+.price-card2{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:30px;transition:.2s}
+.price-card2.featured2{border-color:rgba(79,142,247,.5);background:linear-gradient(180deg,rgba(79,142,247,.07) 0%,var(--card) 100%)}
+.price-card2:hover{transform:translateY(-4px)}
+.pc-tier{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.pc-price{font-size:42px;font-weight:900;margin-bottom:3px;line-height:1}
+.pc-period{font-size:13px;color:var(--text3);font-weight:400}
+.pc-desc{font-size:13px;color:var(--text2);margin:12px 0 20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.pc-features{display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.pcf-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2)}
+.pcf-check{color:var(--teal);font-size:14px;flex-shrink:0}
+.pcf-x{color:var(--text3);font-size:14px;flex-shrink:0}
+.pc-btn{width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:.15s}
+.pcb-outline{background:transparent;border:1px solid var(--border2);color:var(--blue2)}
+.pcb-solid{background:var(--g1);color:#fff}
+.pcb-solid:hover{opacity:.9}
+.pop-tag{display:inline-block;background:var(--g1);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px;margin-bottom:10px}
+
+/* ========= CONTACT PAGE ========= */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.contact-form{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:32px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:7px;display:block;text-transform:uppercase;letter-spacing:.05em}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-size:13px;font-family:inherit;transition:.15s}
+.form-input:focus{outline:none;border-color:var(--border2)}
+.form-input::placeholder{color:var(--text3)}
+textarea.form-input{resize:vertical;min-height:100px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.contact-info{display:flex;flex-direction:column;gap:20px}
+.ci-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.ci-icon2{font-size:24px;margin-bottom:10px}
+.ci-title2{font-size:14px;font-weight:700;margin-bottom:5px}
+.ci-desc2{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ========= FOOTER ========= */
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 32px 24px;margin-top:80px}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-brand p{font-size:13px;color:var(--text3);margin-top:12px;line-height:1.7;max-width:260px}
+.footer-col h4{font-size:12px;font-weight:700;color:var(--text);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
+.footer-col a{display:block;font-size:13px;color:var(--text3);text-decoration:none;margin-bottom:9px;transition:.15s;cursor:pointer}
+.footer-col a:hover{color:var(--text)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.fb-copy{font-size:12px;color:var(--text3)}
+.fb-right{display:flex;gap:16px}
+.fb-right a{font-size:12px;color:var(--text3);text-decoration:none;cursor:pointer}
+.fb-right a:hover{color:var(--text)}
+
+/* ========= TOASTS ========= */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:13px 18px;font-size:13px;z-index:9999;transform:translateY(20px);opacity:0;transition:.25s;pointer-events:none;max-width:320px;display:flex;align-items:center;gap:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-icon{font-size:18px}
+
+/* ========= UTILS ========= */
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}.mt32{margin-top:32px}.mt40{margin-top:40px}.mt48{margin-top:48px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}.mb20{margin-bottom:20px}.mb24{margin-bottom:24px}
+.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap8{gap:8px}.gap12{gap:12px}.gap16{gap:16px}
+.text-sm{font-size:13px}.text-xs{font-size:11px}.text-muted{color:var(--text2)}.text-dim{color:var(--text3)}
+.fw7{font-weight:700}.fw8{font-weight:800}
+.w-full{width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.divider{height:1px;background:var(--border);margin:20px 0}
+
+@media(max-width:900px){
+  .dash-layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .classroom-layout,.parent-layout,.contact-grid,.footer-top{grid-template-columns:1fr}
+  .charts-grid,.grid2{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ORBS -->
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-icon">🎓</div>
+    <span class="nav-logo-text">Nexus EduOS</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" id="nl-home" onclick="showPage('home')">Home</button>
+    <button class="nav-link" id="nl-dashboard" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-link" id="nl-students" onclick="showPage('students')">Students</button>
+    <button class="nav-link" id="nl-classroom" onclick="showPage('classroom')">Classroom</button>
+    <button class="nav-link" id="nl-parent" onclick="showPage('parent')">Parent Portal</button>
+    <button class="nav-link" id="nl-analytics" onclick="showPage('analytics')">Analytics</button>
+    <button class="nav-link" id="nl-security" onclick="showPage('security')">Security</button>
+    <button class="nav-link" id="nl-pricing" onclick="showPage('pricing')">Pricing</button>
+    <button class="nav-link" id="nl-contact" onclick="showPage('contact')">Contact</button>
+  </div>
+  <div class="nav-right">
+    <div class="nav-notif" onclick="showToast('🔔 3 new GPS alerts — 2 students near boundary','#F59E0B')">
+      <span>🔔</span><div class="notif-dot"></div>
+    </div>
+    <button class="nav-btn btn-outline" onclick="showPage('dashboard')">Login</button>
+    <button class="nav-btn btn-solid" onclick="showPage('contact')">Get Demo</button>
+  </div>
+</nav>
+
+<!-- ===================== PAGE: HOME ===================== -->
+<div class="page active pt" id="page-home">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="live-dot"></span>Live at 120+ institutions across Asia</div>
+      <h1>The <span class="g-text">Intelligent OS</span><br>for <span class="g-text2">Elite Education</span></h1>
+      <p class="hero-sub">One unified platform for student safety, academic excellence, parent engagement, and institutional operations — powered by AI, IoT, GPS wearables, and real-time intelligence inspired by China & Japan's next-gen EdTech.</p>
+      <div class="hero-btns">
+        <button class="big-btn big-btn-primary" onclick="showPage('dashboard')">🚀 Explore Dashboard</button>
+        <button class="big-btn big-btn-ghost" onclick="showPage('pricing')">View Pricing →</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hst"><div class="hst-num g-text">50K+</div><div class="hst-lbl">Students managed</div></div>
+        <div class="hst"><div class="hst-num g-text2">13</div><div class="hst-lbl">Core modules</div></div>
+        <div class="hst"><div class="hst-num g-text3">99.9%</div><div class="hst-lbl">Uptime SLA</div></div>
+        <div class="hst"><div class="hst-num" style="color:var(--teal)">6ms</div><div class="hst-lbl">GPS alert latency</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:0 32px 80px;max-width:1280px;margin:0 auto">
+    <div class="sec-hd text-center" style="text-align:center">
+      <div class="sec-badge2">Platform Modules</div>
+      <h2 class="sec-h2">Everything an elite institution needs</h2>
+      <p class="sec-p" style="margin:0 auto">13 deeply integrated modules — click any to explore</p>
+    </div>
+    <div class="features-row">
+      <div class="feat-card" onclick="showPage('dashboard')"><div class="feat-icon fi-blue">📊</div><div class="feat-title">Super Admin Dashboard</div><div class="feat-desc">Global analytics, GPS alerts, device monitoring, incident management, system health</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('students')"><div class="feat-icon fi-teal">🎓</div><div class="feat-title">Student Management</div><div class="feat-desc">Full lifecycle, QR digital IDs, RFID/GPS wristbands, medical alerts, behavior records</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('classroom')"><div class="feat-icon fi-purple">💻</div><div class="feat-title">Digital Classroom</div><div class="feat-desc">Live & recorded classes, AI lesson planner, quiz engine, timetable, engagement AI</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('parent')"><div class="feat-icon fi-green">👨‍👩‍👧</div><div class="feat-title">Parent Portal</div><div class="feat-desc">Live GPS tracking, result delivery, fee alerts, homework tracker, teacher meetings</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('analytics')"><div class="feat-icon fi-amber">📈</div><div class="feat-title">AI Analytics</div><div class="feat-desc">Dropout prediction, attendance anomaly, performance forecasting, risk scoring</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('security')"><div class="feat-icon fi-coral">🛡️</div><div class="feat-title">Security Center</div><div class="feat-desc">MFA, IP whitelisting, audit logs, threat detection, zero-trust architecture</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('pricing')"><div class="feat-icon fi-purple">🚌</div><div class="feat-title">Transport & GPS</div><div class="feat-desc">Live bus tracking, route optimization, boarding confirmations, delay alerts</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('pricing')"><div class="feat-icon fi-blue">💰</div><div class="feat-title">Fees & Finance</div><div class="feat-desc">Payment gateway, installment plans, scholarship tracking, revenue analytics</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('pricing')"><div class="feat-icon fi-teal">📝</div><div class="feat-title">Examinations</div><div class="feat-desc">Exam planning, hall tickets, result workflows, AI weak-subject detection</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('pricing')"><div class="feat-icon fi-amber">🏠</div><div class="feat-title">Hostel Management</div><div class="feat-desc">Room allocation, curfew GPS, warden dashboard, visitor management</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('pricing')"><div class="feat-icon fi-green">🧠</div><div class="feat-title">Adaptive Learning AI</div><div class="feat-desc">China Squirrel AI-inspired mastery mapping, dynamic pacing, knowledge graphs</div><div class="feat-arr">↗</div></div>
+      <div class="feat-card" onclick="showPage('pricing')"><div class="feat-icon fi-coral">⛓️</div><div class="feat-title">Blockchain Credentials</div><div class="feat-desc">Immutable on-chain transcripts, instant global verification, zero fraud</div><div class="feat-arr">↗</div></div>
+    </div>
+
+    <!-- Advanced strip -->
+    <div class="mt48 sec-hd" style="text-align:center">
+      <div class="sec-badge2">🇨🇳 China · 🇯🇵 Japan Inspired</div>
+      <h2 class="sec-h2">Advanced modules from the world's EdTech leaders</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px">
+      <div class="feat-card" style="border-color:rgba(239,68,68,.2)"><div style="font-size:20px;margin-bottom:10px">🇨🇳</div><div class="feat-title">Emotion & Engagement AI</div><div class="feat-desc">Privacy-controlled classroom cameras detect confusion and fatigue. Live attention heatmap alerts teachers in real time. Inspired by China's campus AI deployments.</div></div>
+      <div class="feat-card" style="border-color:rgba(139,92,246,.2)"><div style="font-size:20px;margin-bottom:10px">🇯🇵</div><div class="feat-title">Digital Twin Campus</div><div class="feat-desc">Live 3D model overlaying GPS positions, occupancy, energy, and maintenance. Emergency command-center mode. Japan's Society 5.0 smart campus vision.</div></div>
+      <div class="feat-card" style="border-color:rgba(16,217,168,.2)"><div style="font-size:20px;margin-bottom:10px">🇯🇵</div><div class="feat-title">Micro-credential Passport</div><div class="feat-desc">Verified digital skill passport shareable with universities and employers. MEXT Digital Badge initiative aligned. Grows with the student from day one.</div></div>
+      <div class="feat-card" style="border-color:rgba(245,158,11,.2)"><div style="font-size:20px;margin-bottom:10px">🇨🇳🇯🇵</div><div class="feat-title">Multilingual AI Tutor</div><div class="feat-desc">LLM-powered tutor in 20+ languages. 24/7 doubt resolution, open-ended essay grading, rubric-aligned scoring with full audit logs.</div></div>
+      <div class="feat-card" style="border-color:rgba(79,142,247,.2)"><div style="font-size:20px;margin-bottom:10px">🇯🇵</div><div class="feat-title">Mental Health Wellbeing AI</div><div class="feat-desc">Wristband HRV biometrics + sentiment surveys build longitudinal wellbeing scores. Early burnout detection weeks before crisis. Counselor escalation flows.</div></div>
+      <div class="feat-card" style="border-color:rgba(34,197,94,.2)"><div style="font-size:20px;margin-bottom:10px">🇯🇵</div><div class="feat-title">Smart Campus IoT & Energy</div><div class="feat-desc">Occupancy-based HVAC/lighting, predictive maintenance, carbon reporting. Mirrors Japan's BEMS standards. 31% energy reduction reported in year one.</div></div>
+    </div>
+  </div>
+
+  <!-- FOOTER on home page -->
+  <div class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo"><div class="nav-logo-icon">🎓</div><span class="nav-logo-text" style="font-size:16px">Nexus EduOS</span></div>
+          <p>The next-generation intelligent education operations platform for elite institutions across Asia Pacific.</p>
+        </div>
+        <div class="footer-col"><h4>Platform</h4><a onclick="showPage('dashboard')">Dashboard</a><a onclick="showPage('students')">Students</a><a onclick="showPage('classroom')">Classroom</a><a onclick="showPage('analytics')">Analytics</a></div>
+        <div class="footer-col"><h4>Solutions</h4><a>K-12 Schools</a><a>Universities</a><a>Multi-campus</a><a>Coaching Centers</a></div>
+        <div class="footer-col"><h4>Company</h4><a onclick="showPage('contact')">Contact</a><a onclick="showPage('pricing')">Pricing</a><a>Privacy Policy</a><a>Terms of Service</a></div>
+      </div>
+      <div class="footer-bottom">
+        <div class="fb-copy">© 2026 Nexus EduOS. All rights reserved. Built for educational excellence.</div>
+        <div class="fb-right"><a>🇮🇳 India</a><a>🇯🇵 Japan</a><a>🌏 Asia Pacific</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: DASHBOARD ===================== -->
+<div class="page pt" id="page-dashboard">
+  <div class="dash-layout">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Overview</div>
+        <button class="sidebar-item active" onclick="showDash('overview')"><span class="si-icon">📊</span>Dashboard</button>
+        <button class="sidebar-item" onclick="showDash('gps')"><span class="si-icon">📍</span>GPS Tracking<span class="badge-count">2</span></button>
+        <button class="sidebar-item" onclick="showDash('alerts')"><span class="si-icon">🚨</span>Alerts<span class="badge-count">5</span></button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Academics</div>
+        <button class="sidebar-item" onclick="showPage('classroom')"><span class="si-icon">💻</span>Classrooms</button>
+        <button class="sidebar-item" onclick="showPage('students')"><span class="si-icon">🎓</span>Students</button>
+        <button class="sidebar-item" onclick="showDash('exams')"><span class="si-icon">📝</span>Examinations</button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Operations</div>
+        <button class="sidebar-item" onclick="showDash('transport')"><span class="si-icon">🚌</span>Transport</button>
+        <button class="sidebar-item" onclick="showDash('fees')"><span class="si-icon">💰</span>Finance</button>
+        <button class="sidebar-item" onclick="showDash('hostel')"><span class="si-icon">🏠</span>Hostel</button>
+        <button class="sidebar-item" onclick="showDash('visitors')"><span class="si-icon">🪪</span>Visitors</button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Intelligence</div>
+        <button class="sidebar-item" onclick="showPage('analytics')"><span class="si-icon">📈</span>Analytics</button>
+        <button class="sidebar-item" onclick="showPage('security')"><span class="si-icon">🛡️</span>Security</button>
+        <button class="sidebar-item" onclick="showPage('parent')"><span class="si-icon">👨‍👩‍👧</span>Parent Portal</button>
+      </div>
+    </div>
+
+    <div class="dash-main">
+      <!-- OVERVIEW PANEL -->
+      <div class="dash-panel active" id="dp-overview">
+        <div class="page-header">
+          <div><div class="ph-title">Good morning, Dr. Priya 👋</div><div class="ph-sub">Monday, 26 May 2026 · Delhi International Academy</div></div>
+          <div class="toolbar">
+            <button class="filter-btn">This Week ▾</button>
+            <button class="action-btn">+ New Report</button>
+          </div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-card"><div class="mc-label">🎓 Total Students</div><div class="mc-val g-text">4,218</div><div class="mc-change mc-up">↑ 3.2% this term</div></div>
+          <div class="metric-card"><div class="mc-label">✅ Present Today</div><div class="mc-val" style="color:var(--teal)">3,941</div><div class="mc-change mc-up">↑ 93.4% attendance</div></div>
+          <div class="metric-card"><div class="mc-label">🚨 Active Alerts</div><div class="mc-val" style="color:var(--coral)">5</div><div class="mc-change mc-down">2 GPS boundary alerts</div></div>
+          <div class="metric-card"><div class="mc-label">💰 Fee Collected</div><div class="mc-val" style="color:var(--amber)">₹1.8Cr</div><div class="mc-change mc-up">↑ 88% this month</div></div>
+          <div class="metric-card"><div class="mc-label">🚌 Buses Active</div><div class="mc-val" style="color:var(--purple)">24</div><div class="mc-change text-dim">All on route</div></div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-title">Weekly Attendance</div>
+            <div class="chart-sub">Students present each day this week</div>
+            <div class="bar-chart">
+              <div class="bar" style="height:88%;background:var(--blue);opacity:.7"><div class="bar-tip">Mon 3,712</div></div>
+              <div class="bar" style="height:92%;background:var(--blue);opacity:.8"><div class="bar-tip">Tue 3,882</div></div>
+              <div class="bar" style="height:85%;background:var(--blue);opacity:.7"><div class="bar-tip">Wed 3,590</div></div>
+              <div class="bar" style="height:96%;background:var(--blue)"><div class="bar-tip">Thu 4,050</div></div>
+              <div class="bar" style="height:93%;background:var(--teal)"><div class="bar-tip">Fri 3,941</div></div>
+            </div>
+            <div class="chart-labels"><span class="chart-label">Mon</span><span class="chart-label">Tue</span><span class="chart-label">Wed</span><span class="chart-label">Thu</span><span class="chart-label">Fri</span></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Fee Collection Status</div>
+            <div class="chart-sub">Current academic term</div>
+            <div style="display:flex;align-items:center;gap:20px;margin-top:8px">
+              <div class="chart-donut">
+                <svg class="donut-svg" width="120" height="120" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="3.5"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-dasharray="76 24" stroke-linecap="round"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--amber)" stroke-width="3.5" stroke-dasharray="16 84" stroke-dashoffset="-76" stroke-linecap="round"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--coral)" stroke-width="3.5" stroke-dasharray="8 92" stroke-dashoffset="-92" stroke-linecap="round"/>
+                </svg>
+                <div class="donut-center"><div class="dc-num g-text">88%</div><div class="dc-lbl">collected</div></div>
+              </div>
+              <div class="donut-legend">
+                <div class="dl-item"><div class="dl-dot" style="background:var(--teal)"></div>Paid · 76%</div>
+                <div class="dl-item"><div class="dl-dot" style="background:var(--amber)"></div>Partial · 16%</div>
+                <div class="dl-item"><div class="dl-dot" style="background:var(--coral)"></div>Overdue · 8%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-card mb20">
+          <div class="chart-title">Recent Alerts & Incidents</div>
+          <div class="chart-sub">Last 24 hours · 5 active</div>
+          <div class="mt16">
+            <table class="alerts-table">
+              <thead><tr><th>Time</th><th>Type</th><th>Student / Detail</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td>09:14</td><td>📍 GPS Boundary</td><td>Aryan Sharma · Class 9A · Gate 3</td><td><span class="status-badge sb-red">Active</span></td><td><button class="action-btn" style="padding:4px 10px;font-size:11px" onclick="showToast('Security team dispatched to Gate 3','#10D9A8')">Respond</button></td></tr>
+                <tr><td>08:52</td><td>📍 GPS Boundary</td><td>Meena Pillai · Class 6B · North fence</td><td><span class="status-badge sb-amber">Monitoring</span></td><td><button class="action-btn" style="padding:4px 10px;font-size:11px" onclick="showToast('Parent notified via WhatsApp','#4F8EF7')">Notify</button></td></tr>
+                <tr><td>08:30</td><td>🔐 Suspicious Login</td><td>Unknown device · Admin panel</td><td><span class="status-badge sb-red">Blocked</span></td><td><button class="action-btn" style="padding:4px 10px;font-size:11px" onclick="showToast('IP blocked and logged to audit trail','#10D9A8')">Review</button></td></tr>
+                <tr><td>08:10</td><td>💊 Medical Alert</td><td>Rohan Gupta · Allergy reaction reported</td><td><span class="status-badge sb-green">Resolved</span></td><td><button class="filter-btn" style="padding:4px 10px;font-size:11px">View Log</button></td></tr>
+                <tr><td>07:45</td><td>🚌 Bus Delay</td><td>Route 7 · 18 min delay · Noida sector 62</td><td><span class="status-badge sb-amber">En Route</span></td><td><button class="filter-btn" style="padding:4px 10px;font-size:11px">Track</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- GPS PANEL -->
+      <div class="dash-panel" id="dp-gps">
+        <div class="page-header"><div><div class="ph-title">📍 GPS Live Tracking</div><div class="ph-sub">Real-time student location monitoring · 4,218 devices active</div></div><button class="action-btn" onclick="showToast('Emergency broadcast sent to all security staff','#EF4444')">🚨 Emergency Broadcast</button></div>
+        <div class="grid2 mb20">
+          <div class="metric-card"><div class="mc-label">✅ Inside Campus</div><div class="mc-val" style="color:var(--teal)">4,196</div></div>
+          <div class="metric-card"><div class="mc-label">⚠️ Boundary Alerts</div><div class="mc-val" style="color:var(--coral)">2</div></div>
+        </div>
+        <div class="gps-map mb20">
+          <div class="map-grid-bg"></div>
+          <div class="campus-fence"></div>
+          <div class="zone-tag">🏫 Campus boundary — Delhi International Academy</div>
+          <div class="sdot sdot-ok" style="top:100px;left:160px"></div>
+          <div class="sdot sdot-ok" style="top:150px;left:240px"></div>
+          <div class="sdot sdot-ok" style="top:190px;left:200px"></div>
+          <div class="sdot sdot-ok" style="top:220px;left:290px"></div>
+          <div class="sdot sdot-ok" style="top:170px;left:330px"></div>
+          <div class="sdot sdot-ok" style="top:260px;left:190px"></div>
+          <div class="sdot sdot-warn" style="top:80px;left:380px"></div>
+          <div style="position:absolute;top:55px;right:70px"><div class="sdot sdot-alert" style="position:static"></div><div class="sdot-pulse"></div></div>
+          <div class="gps-alert-strip"><div class="gas-icon">⚠️</div><div><div class="gas-text">Aryan Sharma (ID #4821) — Campus exit detected at Gate 3</div><div class="gas-sub">2 min ago · Security notified · Parents alerted via WhatsApp · Live tracking active</div></div><button class="action-btn" style="margin-left:auto;padding:6px 12px;font-size:11px" onclick="showToast('Tracking mode activated — security en route','#10D9A8')">Track Now</button></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Student location log — today</div>
+          <div class="student-list mt12">
+            <div class="sl-item"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🟢</span><div><div class="sl-name">Priya Mehta · Class 10A</div><div class="sl-info">Inside campus · Library · Last update 30s ago</div></div></div><span class="status-badge sb-green">Safe</span></div>
+            <div class="sl-item"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🔴</span><div><div class="sl-name">Aryan Sharma · Class 9A</div><div class="sl-info">Exited campus · Gate 3 · 2 min ago</div></div></div><span class="status-badge sb-red">Alert</span></div>
+            <div class="sl-item"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🟡</span><div><div class="sl-name">Meena Pillai · Class 6B</div><div class="sl-info">Near north boundary · Moving · 4 min ago</div></div></div><span class="status-badge sb-amber">Monitor</span></div>
+            <div class="sl-item"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🟢</span><div><div class="sl-name">Rahul Iyer · Class 11C</div><div class="sl-info">Inside campus · Canteen · Last update 1 min ago</div></div></div><span class="status-badge sb-green">Safe</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUB PANELS -->
+      <div class="dash-panel" id="dp-alerts"><div class="page-header"><div><div class="ph-title">🚨 Alerts Center</div><div class="ph-sub">5 active alerts requiring attention</div></div></div><div class="chart-card"><table class="alerts-table"><thead><tr><th>Time</th><th>Priority</th><th>Alert</th><th>Assigned To</th><th>Status</th></tr></thead><tbody><tr><td>09:14</td><td><span class="status-badge sb-red">High</span></td><td>GPS exit — Aryan Sharma</td><td>Security Team</td><td><span class="status-badge sb-red">Active</span></td></tr><tr><td>08:52</td><td><span class="status-badge sb-amber">Medium</span></td><td>Boundary proximity — Meena Pillai</td><td>Warden</td><td><span class="status-badge sb-amber">Monitoring</span></td></tr><tr><td>08:30</td><td><span class="status-badge sb-red">Critical</span></td><td>Suspicious admin login — unknown device</td><td>IT Security</td><td><span class="status-badge sb-green">Blocked</span></td></tr><tr><td>08:10</td><td><span class="status-badge sb-green">Low</span></td><td>Allergy alert — Rohan Gupta</td><td>Medical</td><td><span class="status-badge sb-green">Resolved</span></td></tr><tr><td>07:45</td><td><span class="status-badge sb-amber">Medium</span></td><td>Bus Route 7 delay — 18 minutes</td><td>Transport</td><td><span class="status-badge sb-amber">En Route</span></td></tr></tbody></table></div></div>
+      <div class="dash-panel" id="dp-exams"><div class="page-header"><div><div class="ph-title">📝 Examinations</div><div class="ph-sub">Term 2 exams — June 2026</div></div><button class="action-btn" onclick="showToast('Exam schedule published and sent to all parents','#10D9A8')">Publish Schedule</button></div><div class="metric-row"><div class="metric-card"><div class="mc-label">📅 Exams Scheduled</div><div class="mc-val g-text">18</div></div><div class="metric-card"><div class="mc-label">✅ Results Published</div><div class="mc-val" style="color:var(--teal)">12</div></div><div class="metric-card"><div class="mc-label">⏳ Pending</div><div class="mc-val" style="color:var(--amber)">6</div></div></div><div class="chart-card"><table class="alerts-table"><thead><tr><th>Subject</th><th>Class</th><th>Date</th><th>Hall</th><th>Status</th></tr></thead><tbody><tr><td>Mathematics</td><td>10A, 10B, 10C</td><td>02 Jun</td><td>H-Block</td><td><span class="status-badge sb-blue">Scheduled</span></td></tr><tr><td>Physics</td><td>11 Science</td><td>03 Jun</td><td>A-Block</td><td><span class="status-badge sb-blue">Scheduled</span></td></tr><tr><td>English</td><td>All classes</td><td>04 Jun</td><td>Multi halls</td><td><span class="status-badge sb-amber">Drafting</span></td></tr><tr><td>Chemistry</td><td>11 Science</td><td>05 Jun</td><td>Lab 1</td><td><span class="status-badge sb-amber">Pending</span></td></tr></tbody></table></div></div>
+      <div class="dash-panel" id="dp-transport"><div class="page-header"><div><div class="ph-title">🚌 Transport Management</div><div class="ph-sub">24 buses active · All routes monitored</div></div></div><div class="metric-row"><div class="metric-card"><div class="mc-label">🚌 Active Buses</div><div class="mc-val g-text">24</div></div><div class="metric-card"><div class="mc-label">👥 Students Aboard</div><div class="mc-val" style="color:var(--teal)">612</div></div><div class="metric-card"><div class="mc-label">⚠️ Delays</div><div class="mc-val" style="color:var(--amber)">1</div></div></div><div class="chart-card"><table class="alerts-table"><thead><tr><th>Bus</th><th>Route</th><th>Driver</th><th>Students</th><th>ETA</th><th>Status</th></tr></thead><tbody><tr><td>DIA-01</td><td>Dwarka Sec 10</td><td>Ramesh Kumar</td><td>28</td><td>8:45 AM</td><td><span class="status-badge sb-green">On time</span></td></tr><tr><td>DIA-07</td><td>Noida Sec 62</td><td>Suresh Lal</td><td>31</td><td>9:03 AM</td><td><span class="status-badge sb-amber">+18 min</span></td></tr><tr><td>DIA-12</td><td>Rohini Sec 3</td><td>Manoj Singh</td><td>24</td><td>8:40 AM</td><td><span class="status-badge sb-green">On time</span></td></tr></tbody></table></div></div>
+      <div class="dash-panel" id="dp-fees"><div class="page-header"><div><div class="ph-title">💰 Finance Dashboard</div><div class="ph-sub">Term 2 · 2025-26</div></div><button class="action-btn" onclick="showToast('Overdue reminders sent to 312 parents via WhatsApp','#F59E0B')">Send Reminders</button></div><div class="metric-row"><div class="metric-card"><div class="mc-label">💰 Total Collected</div><div class="mc-val g-text">₹1.8Cr</div></div><div class="metric-card"><div class="mc-label">⏳ Pending</div><div class="mc-val" style="color:var(--amber)">₹24L</div></div><div class="metric-card"><div class="mc-label">🎓 Scholarships</div><div class="mc-val" style="color:var(--purple)">48</div></div></div></div>
+      <div class="dash-panel" id="dp-hostel"><div class="page-header"><div><div class="ph-title">🏠 Hostel Management</div><div class="ph-sub">3 blocks · 480 residents</div></div></div><div class="metric-row"><div class="metric-card"><div class="mc-label">🏠 Total Rooms</div><div class="mc-val g-text">160</div></div><div class="metric-card"><div class="mc-label">🛏️ Occupied</div><div class="mc-val" style="color:var(--teal)">148</div></div><div class="metric-card"><div class="mc-label">⏰ Curfew Breaches</div><div class="mc-val" style="color:var(--coral)">2</div></div></div></div>
+      <div class="dash-panel" id="dp-visitors"><div class="page-header"><div><div class="ph-title">🪪 Visitor Management</div><div class="ph-sub">Today's visitors · Gate 1 &amp; 2</div></div><button class="action-btn" onclick="showToast('New visitor QR pass generated','#10D9A8')">+ New Visitor</button></div><div class="chart-card"><table class="alerts-table"><thead><tr><th>Name</th><th>Purpose</th><th>Host</th><th>Check-in</th><th>Status</th></tr></thead><tbody><tr><td>Suresh Mehta</td><td>Parent meeting</td><td>Mrs. Sharma (Grade 8)</td><td>09:30 AM</td><td><span class="status-badge sb-green">Inside</span></td></tr><tr><td>Tech Vision Ltd</td><td>Lab equipment delivery</td><td>Admin</td><td>10:00 AM</td><td><span class="status-badge sb-blue">Scheduled</span></td></tr><tr><td>CBSE Inspector</td><td>Audit visit</td><td>Principal</td><td>11:00 AM</td><td><span class="status-badge sb-blue">Scheduled</span></td></tr></tbody></table></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: STUDENTS ===================== -->
+<div class="page pt" id="page-students">
+  <div style="padding:28px 32px">
+    <div class="page-header">
+      <div><div class="ph-title">Student Management</div><div class="ph-sub">4,218 students enrolled · Term 2 · 2025-26</div></div>
+      <div class="toolbar">
+        <input class="search-input" placeholder="🔍 Search by name, ID, class...">
+        <button class="filter-btn">Class ▾</button>
+        <button class="filter-btn">Status ▾</button>
+        <button class="action-btn" onclick="showToast('New student enrollment form opened','#4F8EF7')">+ Enroll Student</button>
+      </div>
+    </div>
+    <div class="metric-row mb24">
+      <div class="metric-card"><div class="mc-label">Total Enrolled</div><div class="mc-val g-text">4,218</div></div>
+      <div class="metric-card"><div class="mc-label">Present Today</div><div class="mc-val" style="color:var(--teal)">3,941</div></div>
+      <div class="metric-card"><div class="mc-label">GPS Active</div><div class="mc-val" style="color:var(--blue)">4,210</div></div>
+      <div class="metric-card"><div class="mc-label">At Risk (AI)</div><div class="mc-val" style="color:var(--coral)">24</div></div>
+    </div>
+    <div class="students-grid">
+      <div class="student-card" onclick="openProfile('Priya Mehta','10A','Female','New Delhi','A+','✅ Safe')">
+        <div class="student-avatar" style="background:rgba(16,217,168,.15);color:var(--teal)">PM</div>
+        <div class="sc-name">Priya Mehta</div><div class="sc-id">ID: DIA-2024-0421 · Class 10A</div>
+        <div class="sc-info">
+          <div class="sc-row"><span class="sc-key">Attendance</span><span class="sc-val">96.2%</span></div>
+          <div class="sc-row"><span class="sc-key">Avg Grade</span><span class="sc-val">A · 88/100</span></div>
+          <div class="sc-row"><span class="sc-key">GPS Status</span><span class="sc-val" style="color:var(--teal)">● Inside campus</span></div>
+          <div class="sc-row"><span class="sc-key">Fee Status</span><span class="sc-val" style="color:var(--green)">Paid</span></div>
+        </div>
+      </div>
+      <div class="student-card" onclick="openProfile('Aryan Sharma','9A','Male','Noida','B+','🚨 GPS Alert')">
+        <div class="student-avatar" style="background:rgba(242,107,78,.15);color:var(--coral)">AS</div>
+        <div class="sc-name">Aryan Sharma</div><div class="sc-id">ID: DIA-2025-0184 · Class 9A</div>
+        <div class="sc-info">
+          <div class="sc-row"><span class="sc-key">Attendance</span><span class="sc-val">78.4%</span></div>
+          <div class="sc-row"><span class="sc-key">Avg Grade</span><span class="sc-val">C+ · 62/100</span></div>
+          <div class="sc-row"><span class="sc-key">GPS Status</span><span class="sc-val" style="color:var(--coral)">● Campus exit alert</span></div>
+          <div class="sc-row"><span class="sc-key">Fee Status</span><span class="sc-val" style="color:var(--amber)">Partial</span></div>
+        </div>
+      </div>
+      <div class="student-card" onclick="openProfile('Rahul Iyer','11C','Male','Delhi','O+','✅ Safe')">
+        <div class="student-avatar" style="background:rgba(139,92,246,.15);color:var(--purple)">RI</div>
+        <div class="sc-name">Rahul Iyer</div><div class="sc-id">ID: DIA-2023-0892 · Class 11C</div>
+        <div class="sc-info">
+          <div class="sc-row"><span class="sc-key">Attendance</span><span class="sc-val">91.8%</span></div>
+          <div class="sc-row"><span class="sc-key">Avg Grade</span><span class="sc-val">A+ · 94/100</span></div>
+          <div class="sc-row"><span class="sc-key">GPS Status</span><span class="sc-val" style="color:var(--teal)">● Inside campus</span></div>
+          <div class="sc-row"><span class="sc-key">Fee Status</span><span class="sc-val" style="color:var(--green)">Paid</span></div>
+        </div>
+      </div>
+      <div class="student-card" onclick="openProfile('Meena Pillai','6B','Female','Delhi','AB+','⚠️ Monitor')">
+        <div class="student-avatar" style="background:rgba(245,158,11,.15);color:var(--amber)">MP</div>
+        <div class="sc-name">Meena Pillai</div><div class="sc-id">ID: DIA-2026-0056 · Class 6B</div>
+        <div class="sc-info">
+          <div class="sc-row"><span class="sc-key">Attendance</span><span class="sc-val">88.3%</span></div>
+          <div class="sc-row"><span class="sc-key">Avg Grade</span><span class="sc-val">B · 74/100</span></div>
+          <div class="sc-row"><span class="sc-key">GPS Status</span><span class="sc-val" style="color:var(--amber)">● Near boundary</span></div>
+          <div class="sc-row"><span class="sc-key">Fee Status</span><span class="sc-val" style="color:var(--green)">Paid</span></div>
+        </div>
+      </div>
+      <div class="student-card" onclick="openProfile('Rohan Gupta','8D','Male','Gurgaon','B-','✅ Safe')">
+        <div class="student-avatar" style="background:rgba(79,142,247,.15);color:var(--blue2)">RG</div>
+        <div class="sc-name">Rohan Gupta</div><div class="sc-id">ID: DIA-2024-0311 · Class 8D</div>
+        <div class="sc-info">
+          <div class="sc-row"><span class="sc-key">Attendance</span><span class="sc-val">84.1%</span></div>
+          <div class="sc-row"><span class="sc-key">Avg Grade</span><span class="sc-val">B+ · 79/100</span></div>
+          <div class="sc-row"><span class="sc-key">GPS Status</span><span class="sc-val" style="color:var(--teal)">● Inside campus</span></div>
+          <div class="sc-row"><span class="sc-key">Fee Status</span><span class="sc-val" style="color:var(--coral)">Overdue</span></div>
+        </div>
+      </div>
+      <div class="student-card" onclick="openProfile('Aisha Khan','12A','Female','Noida','A+','✅ Safe')">
+        <div class="student-avatar" style="background:rgba(34,197,94,.15);color:var(--green)">AK</div>
+        <div class="sc-name">Aisha Khan</div><div class="sc-id">ID: DIA-2022-0178 · Class 12A</div>
+        <div class="sc-info">
+          <div class="sc-row"><span class="sc-key">Attendance</span><span class="sc-val">98.5%</span></div>
+          <div class="sc-row"><span class="sc-key">Avg Grade</span><span class="sc-val">A+ · 97/100</span></div>
+          <div class="sc-row"><span class="sc-key">GPS Status</span><span class="sc-val" style="color:var(--teal)">● Inside campus</span></div>
+          <div class="sc-row"><span class="sc-key">Fee Status</span><span class="sc-val" style="color:var(--green)">Paid</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="font-size:15px;font-weight:800" id="modal-title">Student Profile</div>
+      <button class="modal-close" onclick="closeProfile()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="profile-top">
+        <div class="profile-avatar" id="modal-av">PM</div>
+        <div><div class="profile-name" id="modal-name">Priya Mehta</div><div class="profile-id" id="modal-id">ID: DIA-2024-0421 · Class 10A</div>
+        <div class="profile-tags"><span class="ptag pt-green" id="modal-status">✅ Safe</span><span class="ptag pt-blue">GPS Active</span><span class="ptag pt-amber" id="modal-blood">A+</span></div></div>
+      </div>
+      <div class="info-grid">
+        <div class="info-item"><div class="ii-label">Gender</div><div class="ii-val" id="modal-gender">Female</div></div>
+        <div class="info-item"><div class="ii-label">Address</div><div class="ii-val" id="modal-addr">New Delhi</div></div>
+        <div class="info-item"><div class="ii-label">Parent Name</div><div class="ii-val">Anjali Mehta</div></div>
+        <div class="info-item"><div class="ii-label">Parent Phone</div><div class="ii-val">+91 98100 12345</div></div>
+        <div class="info-item"><div class="ii-label">Emergency Contact</div><div class="ii-val">+91 98100 54321</div></div>
+        <div class="info-item"><div class="ii-label">Medical Notes</div><div class="ii-val">No known allergies</div></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:14px">Academic Performance</div>
+      <div class="progress-row"><div class="pr-header"><span class="pr-label">Mathematics</span><span class="pr-val">92%</span></div><div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--teal)"></div></div></div>
+      <div class="progress-row"><div class="pr-header"><span class="pr-label">Physics</span><span class="pr-val">88%</span></div><div class="progress-bar"><div class="progress-fill" style="width:88%;background:var(--blue)"></div></div></div>
+      <div class="progress-row"><div class="pr-header"><span class="pr-label">English</span><span class="pr-val">95%</span></div><div class="progress-bar"><div class="progress-fill" style="width:95%;background:var(--purple)"></div></div></div>
+      <div class="progress-row"><div class="pr-header"><span class="pr-label">Chemistry</span><span class="pr-val">79%</span></div><div class="progress-bar"><div class="progress-fill" style="width:79%;background:var(--amber)"></div></div></div>
+      <div class="divider"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="action-btn" onclick="showToast('Result report sent to parent via WhatsApp','#10D9A8');closeProfile()">📤 Send Report to Parent</button>
+        <button class="filter-btn" onclick="showToast('Attendance report downloaded','#4F8EF7');closeProfile()">📥 Download Transcript</button>
+        <button class="filter-btn" onclick="closeProfile()">View Full History</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: CLASSROOM ===================== -->
+<div class="page pt" id="page-classroom">
+  <div style="padding:28px 32px">
+    <div class="page-header">
+      <div><div class="ph-title">Digital Classroom</div><div class="ph-sub">3 classes live now · Smart timetable active</div></div>
+      <div class="toolbar">
+        <button class="filter-btn">Class 10A ▾</button>
+        <button class="action-btn" onclick="showToast('New live class started — students notified','#10D9A8')">🎥 Start Live Class</button>
+      </div>
+    </div>
+    <div class="classroom-layout">
+      <div class="class-main">
+        <div class="chart-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div><div class="chart-title">Mathematics — Class 10A</div><div class="chart-sub">Quadratic Equations · Chapter 4</div></div>
+            <div style="display:flex;align-items:center;gap:10px"><span class="live-badge"><span class="live-dot2"></span>LIVE</span><span style="font-size:12px;color:var(--text3)">38 / 40 present</span></div>
+          </div>
+          <div class="video-mock">
+            <div class="video-overlay"></div>
+            <div class="video-icon">👩‍🏫</div>
+            <div class="video-label">Mrs. Anita Rao — Mathematics</div>
+            <div class="video-sub">Solving ax² + bx + c = 0 using the quadratic formula</div>
+            <div class="video-controls">
+              <button class="vc-btn" onclick="showToast('Microphone toggled','#4F8EF7')">🎤</button>
+              <button class="vc-btn" onclick="showToast('Camera toggled','#4F8EF7')">📷</button>
+              <button class="vc-btn" onclick="showToast('Screen share started','#8B5CF6')">🖥️</button>
+              <button class="vc-btn" onclick="showToast('Whiteboard opened','#F59E0B')">✏️</button>
+              <button class="vc-btn vc-red" onclick="showToast('Class ended — attendance auto-saved','#EF4444')">✕ End</button>
+            </div>
+          </div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-title">Class Engagement</div>
+            <div class="chart-sub">Live participation score · Last 30 min</div>
+            <div class="bar-chart mt12">
+              <div class="bar" style="height:70%;background:var(--purple);opacity:.7"><div class="bar-tip">10m ago 70%</div></div>
+              <div class="bar" style="height:80%;background:var(--purple);opacity:.75"><div class="bar-tip">20m ago 80%</div></div>
+              <div class="bar" style="height:60%;background:var(--purple);opacity:.6"><div class="bar-tip">15m ago 60%</div></div>
+              <div class="bar" style="height:88%;background:var(--purple);opacity:.85"><div class="bar-tip">5m ago 88%</div></div>
+              <div class="bar" style="height:92%;background:var(--teal)"><div class="bar-tip">Now 92%</div></div>
+            </div>
+            <div class="chart-labels"><span class="chart-label">-30</span><span class="chart-label">-20</span><span class="chart-label">-15</span><span class="chart-label">-5</span><span class="chart-label">Now</span></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Homework Status — Last Assignment</div>
+            <div class="chart-sub">Chapter 3 exercises · Due yesterday</div>
+            <div style="display:flex;align-items:center;gap:16px;margin-top:12px">
+              <div class="chart-donut">
+                <svg class="donut-svg" width="100" height="100" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="3.5"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-dasharray="82 18" stroke-linecap="round"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--coral)" stroke-width="3.5" stroke-dasharray="18 82" stroke-dashoffset="-82" stroke-linecap="round"/>
+                </svg>
+                <div class="donut-center"><div class="dc-num" style="font-size:18px;color:var(--teal)">82%</div><div class="dc-lbl">submitted</div></div>
+              </div>
+              <div class="donut-legend">
+                <div class="dl-item"><div class="dl-dot" style="background:var(--teal)"></div>Submitted 33</div>
+                <div class="dl-item"><div class="dl-dot" style="background:var(--coral)"></div>Pending 7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title mb12">Upcoming Quiz — Chapter 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="action-btn" onclick="showToast('Quiz launched — all 38 students notified','#10D9A8')">🧪 Launch Quiz Now</button>
+            <button class="filter-btn" onclick="showToast('AI has generated 10 questions based on today\'s lesson','#8B5CF6')">🤖 AI Generate Questions</button>
+            <button class="filter-btn" onclick="showToast('Homework assigned for tonight','#4F8EF7')">📎 Assign Homework</button>
+          </div>
+        </div>
+      </div>
+      <div class="class-sidebar">
+        <div class="cs-card">
+          <div class="cs-title">Participants (38)<span style="font-size:11px;color:var(--teal);font-weight:400">All connected</span></div>
+          <div class="participant-list">
+            <div class="participant"><div class="part-av" style="background:rgba(16,217,168,.2);color:var(--teal)">AR</div><div><div class="part-name">Mrs. Anita Rao</div><div class="part-role">Teacher · Host</div></div><span style="margin-left:auto;font-size:12px">🎤</span></div>
+            <div class="participant"><div class="part-av" style="background:rgba(79,142,247,.2);color:var(--blue2)">PM</div><div><div class="part-name">Priya Mehta</div><div class="part-role">Student</div></div></div>
+            <div class="participant"><div class="part-av" style="background:rgba(139,92,246,.2);color:var(--purple)">RI</div><div><div class="part-name">Rahul Iyer</div><div class="part-role">Student</div></div></div>
+            <div class="participant"><div class="part-av" style="background:rgba(245,158,11,.2);color:var(--amber)">AK</div><div><div class="part-name">Aisha Khan</div><div class="part-role">Student</div></div></div>
+            <div style="font-size:11px;color:var(--text3);padding:6px 0 0">+ 34 more students</div>
+          </div>
+        </div>
+        <div class="cs-card">
+          <div class="cs-title">Today's Timetable — 10A</div>
+          <table class="timetable">
+            <thead><tr><th>Time</th><th>Subject</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>8:00</td><td>Assembly</td><td><span class="tt-badge" style="background:rgba(34,197,94,.15);color:var(--green)">Done</span></td></tr>
+              <tr class="tt-current"><td>9:00</td><td>Mathematics ●</td><td><span class="tt-badge" style="background:rgba(239,68,68,.15);color:#F87171">Live</span></td></tr>
+              <tr><td>10:00</td><td>English</td><td><span class="tt-badge" style="background:rgba(79,142,247,.15);color:var(--blue2)">Next</span></td></tr>
+              <tr><td>11:00</td><td>Physics</td><td><span class="tt-badge" style="background:rgba(255,255,255,.08);color:var(--text3)">—</span></td></tr>
+              <tr><td>12:00</td><td>Lunch Break</td><td><span class="tt-badge" style="background:rgba(255,255,255,.08);color:var(--text3)">—</span></td></tr>
+              <tr><td>13:00</td><td>Chemistry</td><td><span class="tt-badge" style="background:rgba(255,255,255,.08);color:var(--text3)">—</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cs-card">
+          <div class="cs-title">AI Lesson Insights</div>
+          <div class="ai-insight"><div class="ai-icon">🤖</div><div class="ai-text">7 students are showing signs of confusion on the discriminant (b²-4ac). Suggest a 5-min re-explanation before moving to word problems.</div></div>
+          <div class="ai-insight mt8"><div class="ai-icon">📊</div><div class="ai-text">Class 10A's average engagement this week: 84% — up 6% from last week.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: PARENT PORTAL ===================== -->
+<div class="page pt" id="page-parent">
+  <div style="padding:28px 32px">
+    <div class="page-header">
+      <div><div class="ph-title">Parent Portal</div><div class="ph-sub">Welcome, Anjali Mehta · Priya Mehta · Class 10A</div></div>
+      <button class="action-btn" onclick="showToast('Booking a teacher meeting — availability sent to your email','#10D9A8')">📅 Book Teacher Meeting</button>
+    </div>
+    <div class="metric-row mb20">
+      <div class="metric-card"><div class="mc-label">📍 GPS Status</div><div class="mc-val" style="color:var(--teal)">Safe ✓</div><div class="mc-change" style="color:var(--text3)">Library · 2 min ago</div></div>
+      <div class="metric-card"><div class="mc-label">✅ Attendance</div><div class="mc-val g-text">96.2%</div><div class="mc-change mc-up">↑ above class avg</div></div>
+      <div class="metric-card"><div class="mc-label">📊 Avg Grade</div><div class="mc-val" style="color:var(--purple)">A · 88%</div><div class="mc-change mc-up">↑ 2nd in class</div></div>
+      <div class="metric-card"><div class="mc-label">💰 Fee Status</div><div class="mc-val" style="color:var(--green)">Paid ✓</div><div class="mc-change" style="color:var(--text3)">Next due: Jul 2026</div></div>
+    </div>
+    <div class="parent-layout">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="parent-card">
+          <div class="pc-title">📊 Academic Performance</div>
+          <div class="grade-row"><div class="gr-subject">Mathematics</div><div class="gr-bar"><div class="gr-fill" style="width:92%;background:var(--teal)"></div></div><div class="gr-pct" style="color:var(--teal)">92%</div></div>
+          <div class="grade-row"><div class="gr-subject">English</div><div class="gr-bar"><div class="gr-fill" style="width:95%;background:var(--blue)"></div></div><div class="gr-pct" style="color:var(--blue2)">95%</div></div>
+          <div class="grade-row"><div class="gr-subject">Physics</div><div class="gr-bar"><div class="gr-fill" style="width:88%;background:var(--purple)"></div></div><div class="gr-pct" style="color:var(--purple)">88%</div></div>
+          <div class="grade-row"><div class="gr-subject">Chemistry</div><div class="gr-bar"><div class="gr-fill" style="width:79%;background:var(--amber)"></div></div><div class="gr-pct" style="color:var(--amber)">79%</div></div>
+          <div class="grade-row"><div class="gr-subject">History</div><div class="gr-bar"><div class="gr-fill" style="width:84%;background:var(--coral)"></div></div><div class="gr-pct" style="color:var(--coral)">84%</div></div>
+          <div class="ai-insight mt12"><div class="ai-icon">🤖</div><div class="ai-text">AI suggestion: Priya is strong in English and Maths but Chemistry needs attention. Recommended: 2 extra practice sessions this week on Mole Concept.</div></div>
+        </div>
+        <div class="parent-card">
+          <div class="pc-title">💰 Fee History</div>
+          <div class="fee-item"><div><div class="fee-label">Term 2 Tuition Fee</div><div class="fee-due">Paid on 1 Jan 2026</div></div><div class="fee-amount fee-paid">₹42,500 ✓</div></div>
+          <div class="fee-item"><div><div class="fee-label">Transport Fee</div><div class="fee-due">Paid on 1 Jan 2026</div></div><div class="fee-amount fee-paid">₹8,200 ✓</div></div>
+          <div class="fee-item"><div><div class="fee-label">Lab Fee</div><div class="fee-due">Paid on 15 Jan 2026</div></div><div class="fee-amount fee-paid">₹2,000 ✓</div></div>
+          <div class="fee-item" style="border:none"><div><div class="fee-label">Term 3 Tuition Fee</div><div class="fee-due">Due: 1 Jul 2026</div></div><div class="fee-amount fee-pending">₹42,500 ⏳</div></div>
+          <button class="action-btn mt12 w-full" onclick="showToast('Redirecting to payment gateway...','#10D9A8')">💳 Pay Now</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="parent-card">
+          <div class="pc-title">📍 Today's Activity Log</div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-line"><div class="tl-dot" style="background:var(--teal)"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">📍 In Campus — Library</div><div class="tl-time">Now · 10:32 AM</div></div></div>
+            <div class="tl-item"><div class="tl-line"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">💻 Mathematics class — Present</div><div class="tl-time">9:00–10:00 AM</div><div class="tl-desc">Attendance auto-marked via GPS · Score: 18/20 in class quiz</div></div></div>
+            <div class="tl-item"><div class="tl-line"><div class="tl-dot" style="background:var(--purple)"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">🚌 Arrived via Bus DIA-04</div><div class="tl-time">7:58 AM</div><div class="tl-desc">Boarding confirmed at Lajpat Nagar pickup · On time</div></div></div>
+            <div class="tl-item"><div class="tl-line"><div class="tl-dot" style="background:var(--amber)"></div></div><div class="tl-content"><div class="tl-title">🏫 Assembly</div><div class="tl-time">8:00–8:45 AM</div><div class="tl-desc">Present · Good conduct</div></div></div>
+          </div>
+        </div>
+        <div class="parent-card">
+          <div class="pc-title">💬 Messages from School</div>
+          <div class="comm-list">
+            <div class="comm-item"><div class="ci-from">📝 Mrs. Anita Rao — Mathematics</div><div class="ci-msg">Priya did excellent work on today's quiz. Please ensure she revises Chapter 4 tonight for tomorrow's test.</div><div class="ci-time">Today, 10:15 AM</div></div>
+            <div class="comm-item"><div class="ci-from">🏫 Administration</div><div class="ci-msg">Parent-Teacher meeting scheduled for June 15th. Please confirm attendance via the app.</div><div class="ci-time">Yesterday, 3:00 PM</div></div>
+            <div class="comm-item"><div class="ci-from">📊 AI Academic Report</div><div class="ci-msg">Monthly report for May 2026 is ready. Priya ranks 2nd in class. Strong performance in all subjects.</div><div class="ci-time">1 May 2026</div></div>
+          </div>
+          <button class="filter-btn w-full mt12" onclick="showToast('Message sent to teacher','#4F8EF7')">✉️ Message a Teacher</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: ANALYTICS ===================== -->
+<div class="page pt" id="page-analytics">
+  <div style="padding:28px 32px">
+    <div class="page-header"><div><div class="ph-title">AI Analytics & Intelligence</div><div class="ph-sub">Predictive insights · Real-time data · Last updated 2 min ago</div></div><button class="action-btn" onclick="showToast('Full analytics report generated and sent to your email','#10D9A8')">📥 Export Full Report</button></div>
+    <div class="metric-row mb24">
+      <div class="metric-card"><div class="mc-label">🎯 Avg Performance</div><div class="mc-val g-text">82.4%</div><div class="mc-change mc-up">↑ 3.1% vs last term</div></div>
+      <div class="metric-card"><div class="mc-label">🚨 At-Risk Students</div><div class="mc-val" style="color:var(--coral)">24</div><div class="mc-change mc-down">AI-flagged this week</div></div>
+      <div class="metric-card"><div class="mc-label">📉 Dropout Risk</div><div class="mc-val" style="color:var(--amber)">7</div><div class="mc-change mc-down">Needs intervention</div></div>
+      <div class="metric-card"><div class="mc-label">👨‍👩‍👧 Parent Engagement</div><div class="mc-val" style="color:var(--teal)">78%</div><div class="mc-change mc-up">↑ 12% this month</div></div>
+    </div>
+    <div class="analytics-grid">
+      <div class="an-card">
+        <div class="chart-title">Academic Performance Trend</div>
+        <div class="chart-sub">School-wide average by month</div>
+        <div class="bar-chart mt12">
+          <div class="bar" style="height:72%;background:var(--blue);opacity:.6"></div>
+          <div class="bar" style="height:75%;background:var(--blue);opacity:.65"></div>
+          <div class="bar" style="height:70%;background:var(--blue);opacity:.6"></div>
+          <div class="bar" style="height:78%;background:var(--blue);opacity:.7"></div>
+          <div class="bar" style="height:80%;background:var(--blue);opacity:.75"></div>
+          <div class="bar" style="height:82%;background:var(--teal)"></div>
+        </div>
+        <div class="chart-labels"><span class="chart-label">Nov</span><span class="chart-label">Dec</span><span class="chart-label">Jan</span><span class="chart-label">Feb</span><span class="chart-label">Mar</span><span class="chart-label">May</span></div>
+        <div class="ai-insight"><div class="ai-icon">🤖</div><div class="ai-text">Consistent upward trend. AI projects term-end average of 85.2% if current trajectory holds.</div></div>
+      </div>
+      <div class="an-card">
+        <div class="chart-title">Attendance Heatmap</div>
+        <div class="chart-sub">Class-wise this week · % present</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
+          <div class="grade-row"><div class="gr-subject">Class 12</div><div class="gr-bar"><div class="gr-fill" style="width:96%;background:var(--teal)"></div></div><div class="gr-pct" style="color:var(--teal)">96%</div></div>
+          <div class="grade-row"><div class="gr-subject">Class 11</div><div class="gr-bar"><div class="gr-fill" style="width:94%;background:var(--teal)"></div></div><div class="gr-pct" style="color:var(--teal)">94%</div></div>
+          <div class="grade-row"><div class="gr-subject">Class 10</div><div class="gr-bar"><div class="gr-fill" style="width:91%;background:var(--blue)"></div></div><div class="gr-pct" style="color:var(--blue2)">91%</div></div>
+          <div class="grade-row"><div class="gr-subject">Class 9</div><div class="gr-bar"><div class="gr-fill" style="width:88%;background:var(--blue)"></div></div><div class="gr-pct" style="color:var(--blue2)">88%</div></div>
+          <div class="grade-row"><div class="gr-subject">Class 8</div><div class="gr-bar"><div class="gr-fill" style="width:85%;background:var(--amber)"></div></div><div class="gr-pct" style="color:var(--amber)">85%</div></div>
+          <div class="grade-row"><div class="gr-subject">Class 6</div><div class="gr-bar"><div class="gr-fill" style="width:79%;background:var(--coral)"></div></div><div class="gr-pct" style="color:var(--coral)">79%</div></div>
+        </div>
+        <div class="ai-insight"><div class="ai-icon">🤖</div><div class="ai-text">Class 6 & 8 attendance needs attention. AI detected pattern: Mondays & Fridays worst. Suggest parent outreach campaign.</div></div>
+      </div>
+      <div class="an-card">
+        <div class="chart-title">🚨 AI Dropout Risk — Top 5</div>
+        <div class="chart-sub">Students requiring immediate intervention</div>
+        <div style="margin-top:12px">
+          <div class="risk-item"><div class="risk-avatar" style="background:rgba(242,107,78,.15);color:var(--coral)">AS</div><div><div class="risk-name">Aryan Sharma · 9A</div><div class="risk-reason">Attendance 78% · Declining grades · GPS anomalies</div></div><div class="risk-score" style="color:var(--coral)">87%</div></div>
+          <div class="risk-item"><div class="risk-avatar" style="background:rgba(245,158,11,.15);color:var(--amber)">VP</div><div><div class="risk-name">Vishal Pal · 8C</div><div class="risk-reason">Fee overdue 90 days · Attendance 72%</div></div><div class="risk-score" style="color:var(--amber)">74%</div></div>
+          <div class="risk-item"><div class="risk-avatar" style="background:rgba(245,158,11,.15);color:var(--amber)">SS</div><div><div class="risk-name">Sunita Singh · 7A</div><div class="risk-reason">Behavior incidents · Parent not responsive</div></div><div class="risk-score" style="color:var(--amber)">68%</div></div>
+          <div class="risk-item"><div class="risk-avatar" style="background:rgba(79,142,247,.15);color:var(--blue2)">KR</div><div><div class="risk-name">Kiran Rao · 10B</div><div class="risk-reason">Sudden grade drop in 3 subjects</div></div><div class="risk-score" style="color:var(--blue2)">61%</div></div>
+          <div class="risk-item" style="border:none"><div class="risk-avatar" style="background:rgba(79,142,247,.15);color:var(--blue2)">TP</div><div><div class="risk-name">Tarun Prasad · 11A</div><div class="risk-reason">Low engagement in online classes</div></div><div class="risk-score" style="color:var(--blue2)">54%</div></div>
+        </div>
+        <button class="action-btn w-full mt12" onclick="showToast('Intervention workflow triggered for 5 at-risk students','#10D9A8')">🤖 Trigger AI Intervention</button>
+      </div>
+      <div class="an-card">
+        <div class="chart-title">Parent Engagement Score</div>
+        <div class="chart-sub">App opens, responses, meeting bookings</div>
+        <div class="bar-chart mt12">
+          <div class="bar" style="height:60%;background:var(--purple);opacity:.65"></div>
+          <div class="bar" style="height:66%;background:var(--purple);opacity:.7"></div>
+          <div class="bar" style="height:72%;background:var(--purple);opacity:.75"></div>
+          <div class="bar" style="height:75%;background:var(--purple);opacity:.8"></div>
+          <div class="bar" style="height:78%;background:var(--teal)"></div>
+        </div>
+        <div class="chart-labels"><span class="chart-label">Jan</span><span class="chart-label">Feb</span><span class="chart-label">Mar</span><span class="chart-label">Apr</span><span class="chart-label">May</span></div>
+        <div class="ai-insight"><div class="ai-icon">🤖</div><div class="ai-text">Parent engagement up 12% since WhatsApp automation was enabled. Push notifications have 3x higher open rate than email.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: SECURITY ===================== -->
+<div class="page pt" id="page-security">
+  <div style="padding:28px 32px">
+    <div class="page-header"><div><div class="ph-title">Security Center</div><div class="ph-sub">Enterprise-grade · Zero-trust architecture · All systems operational</div></div><span class="status-badge sb-green" style="padding:8px 16px;font-size:13px">🟢 All Systems Secure</span></div>
+    <div class="metric-row mb24">
+      <div class="metric-card"><div class="mc-label">🔐 Login Attempts</div><div class="mc-val g-text">1,284</div><div class="mc-change mc-up">Today · All verified</div></div>
+      <div class="metric-card"><div class="mc-label">🚫 Blocked Threats</div><div class="mc-val" style="color:var(--coral)">3</div><div class="mc-change mc-down">Last 24 hours</div></div>
+      <div class="metric-card"><div class="mc-label">📋 Audit Events</div><div class="mc-val" style="color:var(--teal)">4,920</div><div class="mc-change" style="color:var(--text3)">Logged today</div></div>
+      <div class="metric-card"><div class="mc-label">🌐 Active Sessions</div><div class="mc-val" style="color:var(--purple)">284</div><div class="mc-change" style="color:var(--text3)">Across all roles</div></div>
+    </div>
+    <div class="sec-grid mb24">
+      <div class="sec-item"><div class="seci-icon fi-blue">🔐</div><div><div class="seci-title">MFA & Zero Trust</div><div class="seci-desc">All logins require TOTP or biometric. Every request verified regardless of network origin. Zero implicit trust.</div></div></div>
+      <div class="sec-item"><div class="seci-icon fi-teal">🌐</div><div><div class="seci-title">IP Whitelisting</div><div class="seci-desc">Admin console restricted to 12 approved IP ranges. 847 unauthorized attempts blocked this month.</div></div></div>
+      <div class="sec-item"><div class="seci-icon fi-purple">🔒</div><div><div class="seci-title">AES-256 Encryption</div><div class="seci-desc">All data encrypted at rest and in transit with TLS 1.3. Database fields tokenized. Keys auto-rotated.</div></div></div>
+      <div class="sec-item"><div class="seci-icon fi-coral">📋</div><div><div class="seci-title">Immutable Audit Logs</div><div class="seci-desc">Every action logged to append-only tamper-proof storage. Exportable for CBSE / NAAC compliance audits.</div></div></div>
+      <div class="sec-item"><div class="seci-icon fi-amber">🛡️</div><div><div class="seci-title">Role-Based Access</div><div class="seci-desc">Granular permissions per module, campus, and role. 9 distinct access levels. No privilege escalation paths.</div></div></div>
+      <div class="sec-item"><div class="seci-icon fi-green">🔬</div><div><div class="seci-title">Threat Detection AI</div><div class="seci-desc">Behavioral anomaly detection flags unusual exports, session hijacking patterns, and after-hours admin access.</div></div></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title mb16">Recent Security Audit Log</div>
+      <div class="log-row"><div class="log-type" style="background:var(--teal)"></div><span style="font-size:11px;color:var(--text3);width:80px">09:14:22</span><span class="text-sm">Admin login — Dr. Priya Nair — MFA verified — Chrome / Windows</span><span class="status-badge sb-green" style="margin-left:auto">Allowed</span></div>
+      <div class="log-row"><div class="log-type" style="background:var(--coral)"></div><span style="font-size:11px;color:var(--text3);width:80px">08:30:05</span><span class="text-sm">Admin login attempt — Unknown device — IP blocked (203.0.113.0)</span><span class="status-badge sb-red" style="margin-left:auto">Blocked</span></div>
+      <div class="log-row"><div class="log-type" style="background:var(--amber)"></div><span style="font-size:11px;color:var(--text3);width:80px">08:22:11</span><span class="text-sm">Bulk export attempted — Finance module — flagged by AI anomaly detector</span><span class="status-badge sb-amber" style="margin-left:auto">Flagged</span></div>
+      <div class="log-row"><div class="log-type" style="background:var(--teal)"></div><span style="font-size:11px;color:var(--text3);width:80px">08:10:00</span><span class="text-sm">Student record update — Mrs. Sharma — Result published — Workflow approved</span><span class="status-badge sb-green" style="margin-left:auto">Allowed</span></div>
+      <div class="log-row"><div class="log-type" style="background:var(--teal)"></div><span style="font-size:11px;color:var(--text3);width:80px">07:55:30</span><span class="text-sm">System backup completed — 4.2GB — All 13 modules — Encrypted</span><span class="status-badge sb-green" style="margin-left:auto">Success</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: PRICING ===================== -->
+<div class="page pt" id="page-pricing">
+  <div style="padding:48px 32px">
+    <div class="sec-hd" style="text-align:center">
+      <div class="sec-badge2">Pricing</div>
+      <h2 class="sec-h2">Transparent, scalable plans</h2>
+      <p class="sec-p" style="margin:0 auto">All plans include 99.9% uptime SLA, dedicated onboarding, and full data migration.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card2">
+        <div class="pc-tier">Starter</div>
+        <div class="pc-price">₹2.5L <span class="pc-period">/ year</span></div>
+        <div class="pc-desc">Up to 500 students · Single campus</div>
+        <div class="pc-features">
+          <div class="pcf-item"><span class="pcf-check">✓</span>Core 8 modules</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>GPS wristband integration</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Parent portal & WhatsApp</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Basic analytics</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Email & SMS gateway</div>
+          <div class="pcf-item"><span class="pcf-x">✗</span>AI adaptive learning</div>
+          <div class="pcf-item"><span class="pcf-x">✗</span>Blockchain credentials</div>
+          <div class="pcf-item"><span class="pcf-x">✗</span>Digital twin campus</div>
+        </div>
+        <button class="pc-btn pcb-outline" onclick="showPage('contact')">Get started →</button>
+      </div>
+      <div class="price-card2 featured2">
+        <div class="pop-tag">Most Popular</div>
+        <div class="pc-tier">Professional</div>
+        <div class="pc-price g-text">₹8L <span class="pc-period">/ year</span></div>
+        <div class="pc-desc">Up to 3,000 students · Single campus</div>
+        <div class="pc-features">
+          <div class="pcf-item"><span class="pcf-check">✓</span>All 13 core modules</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>AI adaptive learning engine</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Multilingual AI tutor (24/7)</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Blockchain credentials</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Mental health wellbeing AI</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Predictive dropout analytics</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Micro-credential passports</div>
+          <div class="pcf-item"><span class="pcf-x">✗</span>Digital twin campus</div>
+        </div>
+        <button class="pc-btn pcb-solid" onclick="showToast('Free 30-day trial started — check your email','#10D9A8')">Start free trial</button>
+      </div>
+      <div class="price-card2">
+        <div class="pc-tier">Enterprise</div>
+        <div class="pc-price">Custom</div>
+        <div class="pc-desc">3,000+ students · Multi-campus · Private cloud</div>
+        <div class="pc-features">
+          <div class="pcf-item"><span class="pcf-check">✓</span>Everything in Professional</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Digital twin campus 3D</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Emotion & engagement AI</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Smart campus IoT & energy</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>On-prem / air-gapped deploy</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Dedicated SRE team 24/7</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Custom API integrations</div>
+          <div class="pcf-item"><span class="pcf-check">✓</span>Quantum-ready security roadmap</div>
+        </div>
+        <button class="pc-btn pcb-outline" onclick="showPage('contact')">Contact sales →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: CONTACT ===================== -->
+<div class="page pt" id="page-contact">
+  <div style="padding:48px 32px">
+    <div class="sec-hd" style="text-align:center;margin-bottom:48px">
+      <div class="sec-badge2">Get in Touch</div>
+      <h2 class="sec-h2">Book a live demo</h2>
+      <p class="sec-p" style="margin:0 auto">Our team will walk you through every module live, tailored to your institution.</p>
+    </div>
+    <div class="contact-grid wrap-sm">
+      <div class="contact-form">
+        <div style="font-size:16px;font-weight:800;margin-bottom:20px">Request a Demo</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First Name</label><input class="form-input" placeholder="Priya"></div>
+          <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" placeholder="Nair"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="principal@school.edu.in"></div>
+        <div class="form-group"><label class="form-label">Institution Name</label><input class="form-input" placeholder="Delhi International Academy"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Student Count</label>
+            <select class="form-input"><option>Under 500</option><option>500–1,500</option><option>1,500–3,000</option><option>3,000+</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Your Role</label>
+            <select class="form-input"><option>Principal</option><option>Director</option><option>IT Head</option><option>Admin Officer</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" placeholder="Tell us about your institution and what you're looking for..."></textarea></div>
+        <button class="action-btn w-full" style="padding:13px;font-size:14px" onclick="showToast('Demo request submitted! Our team will reach out within 24 hours 🎉','#10D9A8')">🚀 Submit Demo Request</button>
+      </div>
+      <div class="contact-info">
+        <div class="ci-card"><div class="ci-icon2">🇮🇳</div><div class="ci-title2">India Office</div><div class="ci-desc2">Nexus EduOS Technologies Pvt. Ltd.<br>4th Floor, DLF Cyber City, Gurugram<br>Haryana 122002, India<br><br>📞 +91 124 400 1234<br>✉️ hello@nexuseduos.in</div></div>
+        <div class="ci-card"><div class="ci-icon2">🇯🇵</div><div class="ci-title2">Japan Office</div><div class="ci-desc2">Nexus EduOS K.K.<br>〒100-0005 Tokyo, Chiyoda<br>Marunouchi 2-chome<br><br>📞 +81 3 5000 1234<br>✉️ japan@nexuseduos.jp</div></div>
+        <div class="ci-card"><div class="ci-icon2">⏱️</div><div class="ci-title2">Response time</div><div class="ci-desc2">Demo requests responded to within 24 hours on business days. Enterprise inquiries get a dedicated account manager within 4 hours.</div></div>
+        <div class="ci-card"><div class="ci-icon2">🏆</div><div class="ci-title2">Trusted by</div><div class="ci-desc2">120+ institutions · 50,000+ students · 🇮🇳 India · 🇯🇵 Japan · 🌏 Southeast Asia</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✓</span><span id="toast-msg">Done</span></div>
+
+<script>
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+  const el=document.getElementById('page-'+p);
+  if(el){el.classList.add('active');window.scrollTo(0,0)}
+  const nl=document.getElementById('nl-'+p);
+  if(nl)nl.classList.add('active');
+}
+function showDash(panel){
+  document.querySelectorAll('.dash-panel').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(x=>x.classList.remove('active'));
+  const dp=document.getElementById('dp-'+panel);
+  if(dp)dp.classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+function openProfile(name,cls,gender,addr,blood,status){
+  const initials=name.split(' ').map(w=>w[0]).join('');
+  document.getElementById('modal-av').textContent=initials;
+  document.getElementById('modal-name').textContent=name;
+  document.getElementById('modal-id').textContent='Class '+cls+' · Delhi International Academy';
+  document.getElementById('modal-title').textContent=name+' — Student Profile';
+  document.getElementById('modal-gender').textContent=gender;
+  document.getElementById('modal-addr').textContent=addr;
+  document.getElementById('modal-blood').textContent=blood;
+  document.getElementById('modal-status').textContent=status;
+  document.getElementById('profile-modal').classList.add('open');
+}
+function closeProfile(){document.getElementById('profile-modal').classList.remove('open')}
+document.getElementById('profile-modal').addEventListener('click',function(e){if(e.target===this)closeProfile()});
+let toastTimer;
+function showToast(msg,color){
+  const t=document.getElementById('toast');
+  t.style.borderColor=color||'var(--border2)';
+  document.getElementById('toast-msg').textContent=msg;
+  document.getElementById('toast-icon').textContent='✓';
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>
